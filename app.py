@@ -20,8 +20,8 @@ import numpy as np
 import os
 
 # Constants
-PEDIATRIC_MODEL_PATH = "densenet121_pneumonia.pth"
-ADULT_MODEL_PATH = "densenet121_adult_rsna.pth"
+PEDIATRIC_MODEL_PATH = "models/densenet121_pneumonia.pth"
+ADULT_MODEL_PATH = "models/densenet121_adult_rsna.pth"
 PEDIATRIC_CLASSES = ["BACTERIA", "NORMAL", "VIRUS"]
 
 
