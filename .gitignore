@@ -1,0 +1,48 @@
+# Virtual Environment
+venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Model weights (too large for git)
+*.pth
+*.onnx
+models/*.onnx
+
+# Data (downloaded via script)
+data/
+chest_xray/
+processed_data/
+
+# OS files
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Streamlit
+.streamlit/
+
+# Temporary / Debug scripts
+download_debug_image.py
+download_test_images.py
+debug_*.py
+test_images/
+
+# Logs
+*.log
