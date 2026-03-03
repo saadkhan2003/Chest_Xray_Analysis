@@ -19,9 +19,18 @@ from PIL import Image
 import numpy as np
 import os
 
+import sys
+
 # Constants
-PEDIATRIC_MODEL_PATH = "models/densenet121_pneumonia.pth"
-ADULT_MODEL_PATH = "models/densenet121_adult_rsna.pth"
+if getattr(sys, 'frozen', False):
+    # Running as compiled exe
+    BASE_PATH = os.path.dirname(sys.executable)
+else:
+    # Running as script
+    BASE_PATH = os.path.dirname(os.path.abspath(__file__))
+
+PEDIATRIC_MODEL_PATH = os.path.join(BASE_PATH, "models", "densenet121_pneumonia.pth")
+ADULT_MODEL_PATH = os.path.join(BASE_PATH, "models", "densenet121_adult_rsna.pth")
 PEDIATRIC_CLASSES = ["BACTERIA", "NORMAL", "VIRUS"]
 
 
