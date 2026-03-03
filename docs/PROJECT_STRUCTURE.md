@@ -1,63 +1,572 @@
 # Project Structure
 
+Complete overview of the AI X-Ray Assistant project architecture and file organization.
+
+---
+
+## Directory Tree
+
 ```
-chest-xray-ai/
+AI-XRay-Assistant/
 │
-├── app.py                    # Streamlit web app (main entry point)
-├── requirements.txt          # Python dependencies
-├── run_app.bat               # Windows launcher script
-├── run_app.sh                # Linux/macOS launcher script
-├── README.md                 # Project overview & setup guide
-├── LICENSE                   # MIT License
-├── .gitignore                # Git exclusion rules
+├── 📱 app.py                           # Main Streamlit web application
+├── 🚀 run_main.py                      # PyInstaller entry point
+├── ⚙️ build_exe.py                     # Executable builder script
+├── 🔧 requirements.txt                 # Python dependencies
+├── 📜 LICENSE                          # MIT License
+├── 📖 README.md                        # Project overview & quick start
+├── 📝 CHANGELOG.md                     # Version history and updates
+├── 🪟 run_app.bat                      # Windows one-click launcher
+├── 🐧 run_app.sh                       # Linux/macOS launcher script
+├── ⚡ launch.bat                       # Alternative Windows launcher
+├── 📦 AI_XRay_Assistant.spec          # PyInstaller build configuration
+├── 🔨 XRay-Detection.bat              # Additional launcher script
 │
-├── .streamlit/
-│   └── config.toml           # Streamlit configuration
+├── 📂 .streamlit/                      # Streamlit configuration
+│   └── config.toml                     # App settings (theme, ports, etc.)
 │
-├── models/
-│   ├── README.md             # Instructions to download model weights
-│   ├── densenet121_pneumonia.pth      # Pediatric model (gitignored)
-│   └── densenet121_adult_rsna.pth     # Adult model (gitignored)
+├── 📂 models/                          # Trained model weights (*.pth files)
+│   ├── densenet121_pneumonia.pth      # Pediatric 3-class model (~27MB)
+│   ├── densenet121_adult_rsna.pth     # Adult binary model (~30MB)
+│   └── README.md                       # Model download instructions
 │
-├── notebooks/
-│   ├── Colab_Model_training.ipynb     # Pediatric model training (Colab)
-│   └── NIH_Adult_Training.ipynb       # Adult model setup (Colab)
+├── 📂 notebooks/                       # Google Colab training notebooks
+│   ├── Colab_Model_training.ipynb     # Pediatric model training pipeline
+│   └── NIH_Adult_Training.ipynb       # Adult model setup (pre-trained)
 │
-├── scripts/
-│   ├── colab_data_setup.py   # Pediatric dataset download & splitting
-│   └── nih_data_setup.py     # Adult model setup helper
+├── 📂 scripts/                         # Data processing utilities
+│   ├── colab_data_setup.py            # Kaggle dataset downloader & splitter
+│   └── nih_data_setup.py              # NIH dataset helper functions
 │
-├── docs/
-│   ├── MODEL_CARD.md         # ML Model Card (architecture, metrics, limitations)
-│   └── PROJECT_STRUCTURE.md  # This file
+├── 📂 docs/                            # Comprehensive documentation
+│   ├── MODEL_CARD.md                  # ML model specifications & metrics
+│   ├── PROJECT_STRUCTURE.md           # This file - architecture overview
+│   ├── INSTALLATION.md                # Detailed installation guide
+│   ├── USAGE.md                       # Application usage instructions
+│   ├── TRAINING.md                    # Model training guide
+│   ├── DEPLOYMENT.md                  # Deployment options & strategies
+│   └── CONTRIBUTING.md                # Contribution guidelines
 │
-└── test_images/              # Sample X-ray images for testing
-    ├── Bacteria_and_Virus/
-    └── Normal/
+├── 📂 test_images/                     # Sample X-ray images for testing
+│   ├── Bacteria_and_Virus/            # Pneumonia cases (bacterial & viral)
+│   └── Normal/                         # Normal chest X-rays
+│
+└── 📂 build/                           # PyInstaller build outputs (generated)
+    └── AI_XRay_Assistant/              # Compiled executable and dependencies
+
 ```
 
-## File Descriptions
+---
 
-### Root Files
+---
+
+## Detailed File Descriptions
+
+### Root Directory Files
+
+#### Application Core
+
+| File | Purpose | Details |
+|------|---------|---------|
+| **app.py** | Main Streamlit web application | • Dual-model support (pediatric + adult)<br>• Image preprocessing functions<br>• Inference logic<br>• UI components<br>• ~256 lines |
+| **run_main.py** | PyInstaller entry point | • Wraps Streamlit CLI for .exe<br>• Path resolution for bundled app<br>• ~30 lines |
+| **requirements.txt** | Python dependencies | • PyTorch, TorchVision<br>• Streamlit<br>• TorchXRayVision<br>• Pillow, NumPy, scikit-learn<br>• And more... |
+
+#### Build & Deployment
+
+| File | Purpose | Details |
+|------|---------|---------|
+| **build_exe.py** | Executable builder script | • Configures PyInstaller<br>• Creates standalone Windows .exe<br>• Includes hidden imports<br>• ~60 lines |
+| **AI_XRay_Assistant.spec** | PyInstaller configuration | • Auto-generated by PyInstaller<br>• Defines build parameters<br>• Binary specifications |
+
+#### Launcher Scripts
+
+| File | Platform | Purpose |
+|------|----------|---------|
+| **run_app.bat** | Windows | • Creates venv if needed<br>• Installs dependencies<br>• Launches Streamlit app |
+| **run_app.sh** | Linux/macOS | • Bash equivalent of .bat<br>• Handles venv activation<br>• Runs Streamlit |
+| **launch.bat** | Windows | • Alternative launcher<br>• Simplified version |
+| **XRay-Detection.bat** | Windows | • Additional launcher option |
+
+#### Documentation
+
+| File | Purpose | Size |
+|------|---------|------|
+| **README.md** | Project overview & quick start | ~400 lines |
+| **CHANGELOG.md** | Version history & updates | ~300 lines |
+| **LICENSE** | MIT License | Standard MIT text |
+
+---
+
+### `.streamlit/` Directory
+
+Configuration files for Streamlit application.
+
 | File | Purpose |
-|---|---|
-| `app.py` | Streamlit app with dual-model support (Pediatric + Adult) |
-| `requirements.txt` | Pinned Python dependencies |
-| `run_app.bat` / `run_app.sh` | One-click launcher scripts |
+|------|---------|
+| **config.toml** | • Server settings (port, address)<br>• Theme customization<br>• Upload size limits<br>• Browser settings |
 
-### `models/`
-Pre-trained model weights. **Not in Git** — download via the Colab notebooks.
+**Example Configuration:**
+```toml
+[server]
+port = 8501
+maxUploadSize = 10
 
-| Model | Classes | Data |
-|---|---|---|
-| `densenet121_pneumonia.pth` | Bacteria, Normal, Virus | Pediatric X-rays (ages 1–5) |
-| `densenet121_adult_rsna.pth` | Pneumonia, Normal | RSNA adult X-rays |
+[theme]
+primaryColor = "#e94560"
+backgroundColor = "#0f0f0f"
+```
 
-### `notebooks/`
-Google Colab notebooks for model training and setup.
+---
 
-### `scripts/`
-Helper scripts used by the Colab notebooks to download and organize datasets.
+### `models/` Directory
 
-### `docs/`
-Project documentation including the ML Model Card.
+Contains trained model weights (not included in repository due to size).
+
+| Model File | Size | Classes | Population | Training Data |
+|------------|------|---------|------------|---------------|
+| **densenet121_pneumonia.pth** | ~27MB | 3 (Bacteria, Normal, Virus) | Pediatric (ages 1-5) | Kaggle Pediatric Dataset |
+| **densenet121_adult_rsna.pth** | ~30MB | 2 (Normal, Pneumonia) | Adult | RSNA Challenge |
+| **README.md** | - | - | - | Download instructions |
+
+**Key Features:**
+- ✅ PyTorch state dict format
+- ✅ Compatible with CPU and GPU
+- ✅ Pre-trained weights included
+- ❌ Not in Git (add to `.gitignore`)
+
+---
+
+### `notebooks/` Directory
+
+Google Colab notebooks for model training and experimentation.
+
+#### Colab_Model_training.ipynb
+
+**Purpose**: Complete pediatric model training pipeline
+
+**Contents:**
+- Kaggle API setup
+- Dataset download (~6GB)
+- Patient-level data splitting
+- Data augmentation configuration
+- DenseNet121 model setup
+- Training loop with GPU
+- Evaluation metrics
+- Confusion matrix visualization
+- Grad-CAM heatmaps
+- Model export
+
+**Requirements:**
+- Google Colab account
+- Kaggle API key (`kaggle.json`)
+- ~2-3 hours training time (T4 GPU)
+
+#### NIH_Adult_Training.ipynb
+
+**Purpose**: Adult model setup using pre-trained weights
+
+**Contents:**
+- TorchXRayVision installation
+- Pre-trained model loading
+- Weight extraction for pneumonia
+- Model format conversion
+- Export for deployment
+
+**Requirements:**
+- Google Colab account
+- ~5-10 minutes setup time
+- No GPU required
+
+---
+
+### `scripts/` Directory
+
+Helper scripts for data processing and setup.
+
+#### colab_data_setup.py
+
+**Purpose**: Automated dataset download and organization
+
+**Key Functions:**
+```python
+setup_kaggle_auth()      # Configure Kaggle API
+download_dataset()        # Download from Kaggle
+organize_by_patient()     # Split by patient ID
+```
+
+**Features:**
+- Finds and configures `kaggle.json`
+- Downloads Pediatric Pneumonia Dataset
+- Filters hidden/system files (.DS_Store, etc.)
+- Extracts patient IDs from filenames
+- Splits data 80/10/10 (train/val/test)
+- Prevents data leakage
+
+**Size**: ~148 lines
+
+#### nih_data_setup.py
+
+**Purpose**: NIH dataset helper functions
+
+**Features:**
+- NIH ChestX-ray14 processing
+- Adult X-ray organization
+- Path management
+
+---
+
+### `docs/` Directory
+
+Comprehensive project documentation.
+
+| Document | Lines | Purpose |
+|----------|-------|---------|
+| **INSTALLATION.md** | ~500 | • System requirements<br>• Installation methods<br>• Model download<br>• Troubleshooting |
+| **USAGE.md** | ~600 | • Starting the app<br>• UI overview<br>• Model selection<br>• Result interpretation |
+| **TRAINING.md** | ~700 | • Colab setup<br>• Training pipeline<br>• Hyperparameter tuning<br>• Custom datasets |
+| **DEPLOYMENT.md** | ~800 | • Local deployment<br>• Docker containerization<br>• Cloud platforms<br>• REST API |
+| **CONTRIBUTING.md** | ~600 | • Code of conduct<br>• Development workflow<br>• Coding standards<br>• PR process |
+| **MODEL_CARD.md** | ~117 | • Model specifications<br>• Performance metrics<br>• Limitations<br>• Ethical considerations |
+| **PROJECT_STRUCTURE.md** | This file | • Architecture overview<br>• File descriptions<br>• Component details |
+
+**Navigation:**
+Each guide includes:
+- Table of Contents
+- Step-by-step instructions
+- Code examples
+- Troubleshooting sections
+- Cross-references to other docs
+
+---
+
+### `test_images/` Directory
+
+Sample chest X-ray images for testing the application.
+
+```
+test_images/
+├── Normal/                   # Normal chest X-rays
+│   ├── NORMAL-*.jpeg        # Healthy lung images
+│   └── ...
+└── Bacteria_and_Virus/      # Pneumonia cases
+    ├── bacteria-*.jpeg      # Bacterial pneumonia
+    ├── virus-*.jpeg         # Viral pneumonia
+    └── ...
+```
+
+**Usage:**
+1. Launch the application
+2. Select appropriate model
+3. Upload test images
+4. Verify predictions match expected categories
+
+**Image Characteristics:**
+- Format: JPEG
+- Resolution: Varies (224×224 to 1024×1024)
+- Type: Frontal chest X-rays
+- Labels: Embedded in filenames
+
+---
+
+### `build/` Directory
+
+Generated during PyInstaller build process (not in repository).
+
+```
+build/
+└── AI_XRay_Assistant/
+    ├── localpycs/          # Compiled Python bytecode
+    ├── Analysis-*.toc      # Build analysis files
+    ├── EXE-*.toc          # Executable specification
+    ├── PKG-*.toc          # Package specification
+    └── ...                # Other build artifacts
+```
+
+**Note**: This directory is automatically created and can be deleted after successful build.
+
+---
+
+## Application Architecture
+
+### Data Flow
+
+```
+User Upload
+    ↓
+Image Validation
+    ↓
+Model Selection (Pediatric/Adult)
+    ↓
+Preprocessing
+    ├─ Pediatric: RGB, ImageNet normalization
+    └─ Adult: Grayscale, XRV normalization
+    ↓
+Model Inference
+    ├─ Pediatric: Softmax (3 classes)
+    └─ Adult: Sigmoid (binary)
+    ↓
+Result Display
+    ├─ Top prediction
+    ├─ Confidence score
+    └─ All class probabilities
+```
+
+### Model Loading
+
+```python
+@st.cache_resource  # Loads once, cached in memory
+def load_pediatric_model():
+    model = models.densenet121(weights=None)
+    model.classifier = nn.Linear(num_ftrs, 3)
+    model.load_state_dict(torch.load(MODEL_PATH))
+    return model
+```
+
+#### Key Design Decisions:
+- **Caching**: Models loaded once per session
+- **Device**: Auto-detects CUDA, falls back to CPU
+- **Error Handling**: Graceful degradation if model missing
+
+---
+
+## Code Organization
+
+### app.py Structure
+
+```python
+# Imports (lines 1-20)
+import streamlit as st
+import torch
+# ...
+
+# Constants (lines 22-30)
+MODEL_PATH = "models/..."
+CLASSES = [...]
+
+# Helper Functions (lines 32-140)
+@st.cache_resource
+def load_pediatric_model(): ...
+
+def preprocess_pediatric(image): ...
+def preprocess_adult(image): ...
+def run_inference(): ...
+
+# UI Code (lines 142-256)
+st.set_page_config(...)
+st.title("...")
+
+if uploaded_file:
+    # Display & inference
+    ...
+```
+
+**Design Pattern**: 
+- Functional programming style
+- Clear separation of concerns
+- Minimal global state
+- Streamlit caching for performance
+
+---
+
+## Dependency Graph
+
+```
+app.py
+├── PyTorch/TorchVision
+│   └── DenseNet121 models
+├── Streamlit
+│   └── Web UI framework
+├── TorchXRayVision
+│   └── Adult model support
+├── Pillow (PIL)
+│   └── Image processing
+├── NumPy
+│   └── Array operations
+└── models/*.pth
+    └── Trained weights
+```
+
+### Package Sizes (Approximate):
+
+| Package | Size | Purpose |
+|---------|------|---------|
+| PyTorch | ~800MB | Deep learning framework |
+| TorchVision | ~10MB | Vision utilities |
+| Streamlit | ~50MB | Web framework |
+| TorchXRayVision | ~5MB | Medical imaging |
+| Other deps | ~100MB | Various utilities |
+| **Total** | **~1GB** | Full installation |
+
+---
+
+## Build Process
+
+### Development to Production
+
+```
+1. Development
+   ├── Edit app.py
+   ├── Test locally: streamlit run app.py
+   └── Commit changes
+
+2. Testing
+   ├── Test with sample images
+   ├── Verify both models work
+   └── Check error handling
+
+3. Build Executable (Optional)
+   ├── Run: python build_exe.py
+   ├── PyInstaller analyzes dependencies
+   ├── Creates dist/AI_XRay_Assistant/
+   └── Copy models/ folder
+
+4. Distribution
+   ├── Zip dist folder
+   ├── Upload to GitHub Releases
+   └── Share with users
+```
+
+---
+
+## Configuration Management
+
+### Environment Variables
+
+Currently not used, but could be added:
+
+```bash
+export XRAY_MODEL_PATH="/path/to/models"
+export XRAY_PORT=8501
+export XRAY_DEBUG=False
+```
+
+### Config Files
+
+- `.streamlit/config.toml`: Streamlit settings
+- `requirements.txt`: Pinned dependencies
+- `.gitignore`: Excluded files/folders
+
+---
+
+## Data Privacy & Security
+
+### Sensitive Files (Not in Repository)
+
+- ✅ `models/*.pth` - Large files, in `.gitignore`
+- ✅ `kaggle.json` - API keys, in `.gitignore`
+- ✅ `build/` and `dist/` - Build artifacts
+- ✅ `__pycache__/` - Compiled Python
+- ✅ `.venv/` or `venv/` - Virtual environments
+
+### HIPAA Considerations
+
+**Not HIPAA Compliant by Default**:
+- No encryption at rest
+- No audit logging
+- No access controls
+- No patient data isolation
+
+**For Clinical Use**:
+- Deploy behind hospital firewall
+- Add authentication layer
+- Enable audit logging
+- Implement encryption
+- Follow hospital IT policies
+
+---
+
+## Performance Considerations
+
+### Model Inference
+
+- **CPU**: ~2-3 seconds per image
+- **GPU (CUDA)**: ~0.5 seconds per image
+- **Batch**: Not optimized (single-image workflow)
+
+### Memory Usage
+
+- **Base app**: ~500MB RAM
+- **With models loaded**: ~2GB RAM
+- **During inference**: ~2.5GB RAM
+- **GPU VRAM**: ~1GB (if using GPU)
+
+### Optimization Opportunities
+
+1. **ONNX Conversion**: 2-3× faster inference
+2. **Quantization**: Smaller models, slightly faster
+3. **Batch Processing**: Process multiple images
+4. **TorchScript**: Compile models for speed
+5. **GPU Acceleration**: Use CUDA when available
+
+---
+
+## Extension Points
+
+### Adding New Models
+
+To add a third model (e.g., tuberculosis detection):
+
+1. **Train model** → save as `densenet121_tb.pth`
+2. **Add loading function** in `app.py`:
+   ```python
+   @st.cache_resource
+   def load_tb_model(): ...
+   ```
+3. **Add preprocessing** for new model
+4. **Update UI** to include model selection
+5. **Add inference logic**
+
+### Adding New Features
+
+Common extension patterns:
+
+- **Grad-CAM visualization**: Add heatmap overlay
+- **DICOM support**: Use `pydicom` library
+- **Batch upload**: Allow multiple files
+- **Report generation**: PDF export
+- **History tracking**: Store predictions
+- **API endpoint**: FastAPI wrapper
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+| Issue | Location | Fix |
+|-------|----------|-----|
+| Model not found | `models/` | Download .pth files |
+| Import errors | `requirements.txt` | `pip install -r requirements.txt` |
+| Port in use | Streamlit | Use `--server.port` flag |
+| Slow inference | CPU | Enable GPU or reduce image size |
+| Memory error | System | Close other applications |
+
+---
+
+## Related Resources
+
+### Internal Documentation
+- [Installation Guide](INSTALLATION.md)
+- [Usage Guide](USAGE.md)
+- [Training Guide](TRAINING.md)
+- [Deployment Guide](DEPLOYMENT.md)
+- [Contributing Guide](CONTRIBUTING.md)
+
+### External Resources
+- [Streamlit Documentation](https://docs.streamlit.io/)
+- [PyTorch Documentation](https://pytorch.org/docs/)
+- [TorchXRayVision](https://github.com/mlmed/torchxrayvision)
+- [DenseNet Paper](https://arxiv.org/abs/1608.06993)
+
+---
+
+## Version History
+
+- **1.0.0** (2026-03-03): Initial release with full documentation
+- See [CHANGELOG.md](../CHANGELOG.md) for detailed version history
+
+---
+
+**Last Updated**: March 3, 2026  
+**Project Structure Version**: 1.0
